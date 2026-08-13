@@ -1,0 +1,12 @@
+event_id,entity_id,peak_definition,start_time,end_time,duration_hours,maximum_demand_kw,mean_demand_kw,minimum_demand_kw,n_intervals
+Academic_threshold_500_0000,Academic,threshold_500,2025-06-11 00:15:00,2025-06-11 01:30:00,1.25,513.99,506.72166666666675,498.0,6
+Academic_threshold_500_0001,Academic,threshold_500,2025-06-11 02:45:00,2025-06-11 03:30:00,0.75,514.16,505.83500000000004,498.38,4
+Academic_threshold_500_0002,Academic,threshold_500,2025-06-11 04:15:00,2025-06-11 04:30:00,0.25,505.92,503.315,500.71,2
+Academic_threshold_500_0003,Academic,threshold_500,2025-06-11 05:15:00,2025-06-11 05:30:00,0.25,506.35,504.315,502.28,2
+Academic_threshold_500_0004,Academic,threshold_500,2025-06-11 06:15:00,2025-06-11 06:30:00,0.25,509.04,505.76,502.48,2
+Academic_threshold_500_0005,Academic,threshold_500,2025-06-11 07:15:00,2025-06-11 07:30:00,0.25,505.09,502.78,500.47,2
+Academic_threshold_500_0006,Academic,threshold_500,2025-06-11 08:15:00,2025-06-11 19:30:00,11.25,801.57,614.3086956521738,490.79,46
+Academic_threshold_500_0007,Academic,threshold_500,2025-06-11 20:45:00,2025-06-11 20:45:00,0.0,506.29,506.29,506.29,1
+Academic_threshold_500_0008,Academic,threshold_500,2025-06-11 21:30:00,2025-06-11 21:30:00,0.0,501.38,501.38,501.38,1
+Academic_threshold_500_0009,Academic,threshold_500,2025-06-11 22:15:00,2025-06-11 22:15:00,0.0,504.44,504.44,504.44,1
+Academic_threshold_500_0010,Academic,threshold_500,2025-06-11 23:00:00,2025-06-11 23:30:00,0.5,507.43,504.72333333333336,500.92,3

@@ -1,0 +1,201 @@
+# ============================================================================
+# Example Configuration - Load Pattern, Flexibility, and DER Opportunity
+# Analysis Engine
+# Implementation Handoff Specification v0.5 - Stage 1 scope
+# (ingestion, canonical mapping, time resolution, missing data, meters/groups,
+#  calendar). Stage 2/3 sections (analysis., scenarios, searches) are stubbed
+# so the file remains forward-compatible; Stage 1 code does not read them.
+# ============================================================================
+
+[metadata]
+config_name = "synthetic_stage1_example"
+random_seed = 42
+
+# ----------------------------------------------------------------------------
+# INPUT DATA
+# ----------------------------------------------------------------------------
+[data.input]
+file_path = "synthetic_load_data.csv"
+file_format = "csv"
+
+# Map source column names -> canonical field names.
+# Canonical fields on the right must be one of: timestamp, meter_id,
+# demand_kw, temperature_f
+[data.column_mapping]
+timestamp = "timestamp"
+meter_id = "meter_id"
+demand_kw = "demand_kw"
+temperature_f = "temperature_f"
+
+[data.datetime]
+format = "%Y-%m-%d %H:%M:%S"   # strptime format; "auto" permitted
+timestamp_convention = "interval_ending"  # non-negotiable per spec; informational only
+timezone = "none"              # "none" = naive timestamps, no tz conversion
+
+# ----------------------------------------------------------------------------
+# TIME RESOLUTION
+# ----------------------------------------------------------------------------
+[data.time]
+resolution = "auto"            # "auto" | "15min" | "30min" | "60min"
+allow_mixed_resolution = false # if true, warn instead of error on mixed intervals
+
+# ----------------------------------------------------------------------------
+# MISSING DATA
+# ----------------------------------------------------------------------------
+[data.missing]
+interpolation_enabled = true
+method = "linear"              # "linear" | "time"
+max_interpolation_intervals = 4
+large_gap_method = "leave_missing"   # "leave_missing" | "profile" (extension point)
+forward_fill_enabled = false
+backward_fill_enabled = false
+
+[data.incomplete_days]
+policy = "retain_with_warning"  # "exclude" | "retain_with_warning" | "interpolate"
+
+# ----------------------------------------------------------------------------
+# VALIDATION STRICTNESS
+# ----------------------------------------------------------------------------
+[validation]
+negative_demand = "error"        # "error" | "warning"
+duplicate_timestamp = "error"    # "error" | "warning"
+nonnumeric_demand = "error"
+irregular_interval = "warning"
+strict = false                   # if true, all WARNING-level findings become fatal
+
+# ----------------------------------------------------------------------------
+# METERS
+# ----------------------------------------------------------------------------
+[[meters]]
+meter_id = "B001"
+display_name = "Administration Building"
+
+[[meters]]
+meter_id = "B002"
+display_name = "Academic Building"
+
+[[meters]]
+meter_id = "B003"
+display_name = "Overnight Process Load"
+
+# ----------------------------------------------------------------------------
+# METER GROUPS (flat, overlapping, hierarchical)
+# `parent` establishes hierarchy. Groups with no `parent` are top-level.
+# A meter or child group may appear under multiple parents (overlap allowed).
+# ----------------------------------------------------------------------------
+[[meter_groups]]
+name = "Administration"
+meters = ["B001"]
+
+[[meter_groups]]
+name = "Academic"
+meters = ["B002"]
+
+[[meter_groups]]
+name = "Overnight"
+meters = ["B003"]
+
+[[meter_groups]]
+name = "Campus_A"
+meters = []
+child_groups = ["Administration", "Academic"]   # hierarchical parent
+
+[[meter_groups]]
+name = "AllMeters"
+meters = []
+child_groups = ["Campus_A", "Overnight"]        # overlaps with Campus_A's members
+
+# ----------------------------------------------------------------------------
+# PORTFOLIO
+# ----------------------------------------------------------------------------
+[portfolio]
+include_all_meters = true   # portfolio = sum of all meters unless overridden
+excluded_meters = []
+
+# ----------------------------------------------------------------------------
+# CALENDAR
+# ----------------------------------------------------------------------------
+[calendar]
+holidays = ["2025-06-19"]   # Juneteenth, falls inside synthetic 21-day window
+custom_day_types = []       # [{name="event_day", dates=["2025-06-10"]}]
+
+[calendar.seasons]
+# month -> season label
+"6" = "summer"
+"7" = "summer"
+"8" = "summer"
+"12" = "winter"
+"1" = "winter"
+"2" = "winter"
+"3" = "spring"
+"4" = "spring"
+"5" = "spring"
+"9" = "fall"
+"10" = "fall"
+"11" = "fall"
+
+# ----------------------------------------------------------------------------
+# ANALYSIS PERIOD
+# ----------------------------------------------------------------------------
+[analysis.period]
+start_date = "2025-06-01"
+end_date = "2025-06-21"
+
+# ----------------------------------------------------------------------------
+# OUTPUT
+# ----------------------------------------------------------------------------
+[output]
+output_directory = "output"
+export_formats = ["csv"]
+
+[logging]
+level = "INFO"
+
+# ============================================================================
+# STAGE 2/3 STUB SECTIONS (not consumed by Stage 1 code; present for schema
+# forward-compatibility only) - see ALGORITHM_REFERENCE.md when implemented.
+# ============================================================================
+[analysis.temperature]
+temperature_bands_f = [32, 50, 65, 80, 90]
+balance_point_method = "change_point_regression"
+
+[analysis.demand]
+thresholds_kw = [500, 750, 1000]
+top_percentiles = [0.99, 0.95]
+top_n_hours = [10, 25, 50]
+
+[analysis.peak_events]
+allowable_gap_intervals = 1
+
+[analysis.profiles]
+normalization_method = "peak_normalized"
+
+[analysis.clustering]
+enabled = true
+method = "auto"
+n_clusters = "auto"
+
+[[time_periods]]
+name = "on_peak"
+start = "14:00"
+end = "19:00"
+
+[[time_periods]]
+name = "intermediate"
+start = "07:00"
+end = "14:00"
+
+[[time_periods]]
+name = "off_peak"
+start = "19:00"
+end = "07:00"
+
+[scenarios.load_shedding]
+enabled = true
+reduction_levels_kw = [100, 250, 500]
+minimum_resulting_demand_kw = 0
+
+[scenarios.storage]
+enabled = false
+
+searches = []

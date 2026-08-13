@@ -1,0 +1,15 @@
+event_id,entity_id,peak_definition,start_time,end_time,duration_hours,maximum_demand_kw,mean_demand_kw,minimum_demand_kw,n_intervals
+Administration_threshold_500_0000,Administration,threshold_500,2025-06-02 16:45:00,2025-06-02 17:15:00,0.5,533.43,526.1166666666667,520.74,3
+Administration_threshold_500_0001,Administration,threshold_500,2025-06-03 16:30:00,2025-06-03 17:15:00,0.75,558.87,531.8025,506.57,4
+Administration_threshold_500_0002,Administration,threshold_500,2025-06-04 16:30:00,2025-06-04 17:15:00,0.75,564.94,537.335,506.04,4
+Administration_threshold_500_0003,Administration,threshold_500,2025-06-05 16:45:00,2025-06-05 17:15:00,0.5,527.73,516.5766666666667,508.63,3
+Administration_threshold_500_0004,Administration,threshold_500,2025-06-09 16:45:00,2025-06-09 17:15:00,0.5,539.31,526.54,516.86,3
+Administration_threshold_500_0005,Administration,threshold_500,2025-06-10 16:45:00,2025-06-10 17:15:00,0.5,533.82,517.3066666666666,502.59,3
+Administration_threshold_500_0006,Administration,threshold_500,2025-06-11 16:45:00,2025-06-11 17:15:00,0.5,550.48,546.0466666666667,538.47,3
+Administration_threshold_500_0007,Administration,threshold_500,2025-06-12 16:45:00,2025-06-12 17:15:00,0.5,555.8,543.9699999999999,538.05,3
+Administration_threshold_500_0008,Administration,threshold_500,2025-06-13 16:45:00,2025-06-13 17:15:00,0.5,548.82,531.3333333333334,507.44,3
+Administration_threshold_500_0009,Administration,threshold_500,2025-06-16 16:45:00,2025-06-16 17:15:00,0.5,516.83,513.4266666666666,510.53,3
+Administration_threshold_500_0010,Administration,threshold_500,2025-06-17 16:45:00,2025-06-17 17:15:00,0.5,547.41,540.39,531.77,3
+Administration_threshold_500_0011,Administration,threshold_500,2025-06-18 16:45:00,2025-06-18 17:15:00,0.5,538.38,513.4233333333333,500.71,3
+Administration_threshold_500_0012,Administration,threshold_500,2025-06-19 16:30:00,2025-06-19 17:15:00,0.75,563.42,537.1075,501.47,4
+Administration_threshold_500_0013,Administration,threshold_500,2025-06-20 16:45:00,2025-06-20 17:00:00,0.25,540.23,533.425,526.62,2

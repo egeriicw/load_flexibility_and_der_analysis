@@ -1,0 +1,3 @@
+cluster_id,cluster_size,percentage_of_days,representative_peak,within_cluster_variability
+0,14,70.0,0.9882454224499378,0.01938457414730591
+1,6,30.0,0.9394729992946756,0.0781434059384773

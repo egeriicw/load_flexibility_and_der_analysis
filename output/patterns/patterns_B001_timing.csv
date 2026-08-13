@@ -1,0 +1,2 @@
+pattern_id,pattern_type,description,frequency,dates,representative_peak_time,statistical_support
+B001_peak_timing_005,recurring_peak_timing,Daily peak recurs near 17:00 on 13 of 19 complete days,13,"[datetime.date(2025, 6, 2), datetime.date(2025, 6, 3), datetime.date(2025, 6, 5), datetime.date(2025, 6, 9), datetime.date(2025, 6, 10), datetime.date(2025, 6, 11), datetime.date(2025, 6, 12), datetime.date(2025, 6, 13), datetime.date(2025, 6, 16), datetime.date(2025, 6, 17), datetime.date(2025, 6, 18), datetime.date(2025, 6, 19), datetime.date(2025, 6, 20)]",17:00,0.684

@@ -1,0 +1,3 @@
+pattern_id,pattern_type,description,date,metric,value,z_score,statistical_support
+B002_outlier_000,outlier_day,2025-06-11 is an outlier on daily_energy_kwh (z=3.86),2025-06-11,daily_energy_kwh,13311.52,3.864,z >= 2.5
+B002_outlier_001,outlier_day,2025-06-11 is an outlier on maximum_demand_kw (z=2.74),2025-06-11,maximum_demand_kw,801.57,2.738,z >= 2.5

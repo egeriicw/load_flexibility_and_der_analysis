@@ -1,0 +1,2 @@
+pattern_id,pattern_type,description,date,metric,value,z_score,statistical_support
+Portfolio_outlier_000,outlier_day,2025-06-11 is an outlier on daily_energy_kwh (z=3.01),2025-06-11,daily_energy_kwh,23238.5475,3.012,z >= 2.5

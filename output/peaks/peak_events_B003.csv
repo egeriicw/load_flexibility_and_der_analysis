@@ -1,0 +1,1 @@
+event_id,entity_id,peak_definition,start_time,end_time,duration_hours,maximum_demand_kw,mean_demand_kw,minimum_demand_kw,n_intervals
