@@ -15,7 +15,7 @@ random_seed = 42
 # INPUT DATA
 # ----------------------------------------------------------------------------
 [data.input]
-file_path = "synthetic_load_data.csv"
+file_path = "data/input/synthetic_load_data.csv"
 file_format = "csv"
 
 # Map source column names -> canonical field names.
