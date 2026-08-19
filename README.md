@@ -40,6 +40,17 @@ A CSV (or future format) with columns mappable to the canonical fields:
 **interval-ending**. See `data/generate_synthetic_data.py` for the
 shipped synthetic dataset and DATA_DICTIONARY.md for field definitions.
 
+If the input file has no `temperature_f` column (or only a partial/
+placeholder one), site temperature can instead be supplied from a
+separate file via `data.external_temperature` in the config (see
+`config/example_configuration.toml`). When `file_path` is set there,
+it is always loaded and joined onto the observations by nearest
+timestamp; by default it only fills rows missing `temperature_f`,
+and `override_existing = true` makes it take precedence wherever a
+match is found. `config/mcdonough_hall_configuration.toml` is a
+worked example that overrides a meter export's placeholder
+temperature column with a real weather-station series.
+
 ## Configuration
 
 See `config/example_configuration.toml`. Controls: input file and
@@ -92,8 +103,12 @@ Stage 2 continues in the same notebook:
 
 12. Time-of-day segment features (morning/midday/afternoon/evening
     peak, overnight/daytime mean) per entity.
-13. Weekday-only change-point (balance-point) cooling regression per
-    meter (STATISTICAL; grid-searched breakpoint, OLS baseload+slope).
+13. Weekday-only change-point (balance-point) regression per meter
+    (STATISTICAL; grid-searched breakpoint(s), least-squares
+    baseload+slope): the full ASHRAE GL14 / IPMVP model family — 2P (no
+    breakpoint), 3P heating, 3P cooling, 4P (shared breakpoint), 5P
+    (independent heating+cooling breakpoints) — with automatic
+    best-model selection via adjusted R².
 14. Demand classification (threshold/percentile/rank — kept as separate
     flags, never collapsed into one generic "peak"), ramps, local
     peaks/valleys, and peak events (contiguous-with-gap-tolerance
@@ -138,8 +153,12 @@ output/
 - Shape classification is rule-based/HEURISTIC (Section 18's required
   initial method); a statistical alternative using cluster assignments
   is a natural Stage 3+ extension.
-- Change-point model is the 1-breakpoint cooling-only baseline (Section
-  13); heating+cooling 5-parameter models are an extension point.
+- Change-point model: the full 2P/3P-heating/3P-cooling/4P/5P family is
+  implemented (Section 13), with `select_best_change_point_model`
+  fitting all five and picking the best by adjusted R² (which penalizes
+  added parameters so a genuinely simpler relationship isn't overfit by
+  the higher-parameter models). Multi-slope models (4P, 5P) constrain
+  slopes non-negative via bounded least squares.
 
 ## Testing
 
@@ -152,8 +171,10 @@ features, missing-data interpolation and gap-size limits, meter group
 resolution (flat/hierarchical/overlap), portfolio construction,
 entity-load summation, daily profile/feature construction.
 
-Stage 2: segment features, change-point model fit (weekday-only, avoids
-weekday/weekend confound) and its insufficient-data guard, temperature
+Stage 2: segment features, change-point model fit (2P/3P
+heating/3P cooling/4P/5P, weekday-only, avoids weekday/weekend confound)
+and its insufficient-data guard, best-model selection via adjusted R²,
+temperature
 banding, threshold/percentile/rank classification, ramp sign
 correctness, local peak/valley detection, peak-event contiguous
 grouping (including allowable-gap merging and the no-qualifying-interval
@@ -179,4 +200,9 @@ python3 -m pytest tests/ -v
 - `analysis.profiles.normalization_method` — only "peak_normalized"
   implemented; min-max/z-score/mean/energy are stubs (Section 11).
 - `analysis.clustering.method` — only K-means implemented.
-- Change-point model — cooling-only, 1-breakpoint; no heating side.
+- Change-point model — the full 2P/3P-heating/3P-cooling/4P/5P family
+  and automatic best-model selection are implemented; curve-fit-based
+  (rather than grid-search) breakpoint estimation and
+  statistical-significance-based model selection (e.g. t-stat gating
+  per ASHRAE GL14, rather than adjusted R² alone) are possible future
+  refinements.
