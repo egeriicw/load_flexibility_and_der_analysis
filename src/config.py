@@ -112,6 +112,26 @@ def validate_configuration(config: dict[str, Any]) -> list[ValidationFinding]:
                 "data.time",
             )
 
+    # --- external temperature (optional) ---
+    ext_temp = config.get("data", {}).get("external_temperature", {})
+    if ext_temp.get("file_path"):
+        ext_mapping = ext_temp.get(
+            "column_mapping", {"timestamp": "timestamp", "temperature_f": "temperature_f"}
+        )
+        for required in ("timestamp", "temperature_f"):
+            if required not in ext_mapping or not ext_mapping[required]:
+                err(
+                    f"data.external_temperature.column_mapping.{required} is required "
+                    "when data.external_temperature.file_path is set",
+                    "data.external_temperature",
+                )
+        tolerance = ext_temp.get("join_tolerance_minutes")
+        if tolerance is not None and (not isinstance(tolerance, (int, float)) or tolerance < 0):
+            err(
+                "data.external_temperature.join_tolerance_minutes must be a non-negative number",
+                "data.external_temperature",
+            )
+
     # --- missing data ---
     missing = config.get("data", {}).get("missing", {})
     max_gap = missing.get("max_interpolation_intervals")

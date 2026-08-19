@@ -147,6 +147,23 @@ def calculate_daily_features(
         idx = g["demand_kw"].idxmax()
         return g.loc[idx, "time_of_day"]
 
+    columns = [
+        "entity_id",
+        "date",
+        "mean_demand_kw",
+        "maximum_demand_kw",
+        "minimum_demand_kw",
+        "daily_energy_kwh",
+        "peak_time",
+        "load_factor",
+        "peak_to_average_ratio",
+        "standard_deviation_kw",
+        "coefficient_of_variation",
+        "is_complete_day",
+    ]
+    if daily_profiles.empty:
+        return pd.DataFrame(columns=columns)
+
     records = []
     for (entity_id, date), g in daily_profiles.groupby(["entity_id", "date"]):
         mean_kw = g["demand_kw"].mean()

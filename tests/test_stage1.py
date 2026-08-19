@@ -93,6 +93,97 @@ def test_validate_input_data_reports_negative_demand(config, canonical_df):
     assert any("negative" in f.message.lower() for f in findings)
 
 
+# ---------------------------------------------- external temperature --
+def test_load_external_temperature_returns_none_when_unconfigured(config):
+    assert ingestion.load_external_temperature_data(config) is None
+
+
+def test_load_external_temperature_reads_and_maps(tmp_path):
+    ext_path = tmp_path / "ext_temp.csv"
+    pd.DataFrame(
+        {"DATE": ["2025-01-01 00:00:00", "2025-01-01 01:00:00"], "TEMP": [30.0, 32.0]}
+    ).to_csv(ext_path, index=False)
+
+    config = {
+        "data": {
+            "external_temperature": {
+                "file_path": str(ext_path),
+                "column_mapping": {"timestamp": "DATE", "temperature_f": "TEMP"},
+            }
+        }
+    }
+    result = ingestion.load_external_temperature_data(config)
+    assert list(result.columns) == ["timestamp", "temperature_f"]
+    assert result["temperature_f"].tolist() == [30.0, 32.0]
+
+
+def test_apply_external_temperature_fills_missing_by_default(tmp_path):
+    ext_path = tmp_path / "ext_temp.csv"
+    pd.DataFrame(
+        {"timestamp": ["2025-01-01 00:00:00", "2025-01-01 01:00:00"], "temperature_f": [30.0, 32.0]}
+    ).to_csv(ext_path, index=False)
+
+    config = {"data": {"external_temperature": {"file_path": str(ext_path)}}}
+    canonical_df = pd.DataFrame(
+        {
+            "timestamp": pd.to_datetime(["2025-01-01 00:00:00", "2025-01-01 01:00:00"]),
+            "temperature_f": [999.0, np.nan],  # existing value kept, gap filled
+        }
+    )
+
+    merged = ingestion.apply_external_temperature(canonical_df, config)
+    assert merged["temperature_f"].tolist() == [999.0, 32.0]
+
+
+def test_apply_external_temperature_override_replaces_existing(tmp_path):
+    ext_path = tmp_path / "ext_temp.csv"
+    pd.DataFrame(
+        {"timestamp": ["2025-01-01 00:00:00", "2025-01-01 01:00:00"], "temperature_f": [30.0, 32.0]}
+    ).to_csv(ext_path, index=False)
+
+    config = {
+        "data": {"external_temperature": {"file_path": str(ext_path), "override_existing": True}}
+    }
+    canonical_df = pd.DataFrame(
+        {
+            "timestamp": pd.to_datetime(["2025-01-01 00:00:00", "2025-01-01 01:00:00"]),
+            "temperature_f": [999.0, 998.0],
+        }
+    )
+
+    merged = ingestion.apply_external_temperature(canonical_df, config)
+    assert merged["temperature_f"].tolist() == [30.0, 32.0]
+
+
+def test_apply_external_temperature_creates_column_when_absent(tmp_path):
+    ext_path = tmp_path / "ext_temp.csv"
+    pd.DataFrame(
+        {"timestamp": ["2025-01-01 00:00:00"], "temperature_f": [30.0]}
+    ).to_csv(ext_path, index=False)
+
+    config = {"data": {"external_temperature": {"file_path": str(ext_path)}}}
+    canonical_df = pd.DataFrame(
+        {"timestamp": pd.to_datetime(["2025-01-01 00:00:00"]), "demand_kw": [10.0]}
+    )
+
+    merged = ingestion.apply_external_temperature(canonical_df, config)
+    assert merged["temperature_f"].tolist() == [30.0]
+
+
+def test_apply_external_temperature_noop_when_unconfigured(canonical_df, config):
+    merged = ingestion.apply_external_temperature(canonical_df, config)
+    pd.testing.assert_frame_equal(merged, canonical_df)
+
+
+def test_config_requires_column_mapping_when_external_temperature_enabled():
+    c = cfg_mod.load_configuration(CONFIG_PATH)
+    c["data"]["external_temperature"] = {"file_path": "some_file.csv", "column_mapping": {}}
+    findings = cfg_mod.validate_configuration(c)
+    assert any(
+        f.section == "data.external_temperature" and f.severity == "ERROR" for f in findings
+    )
+
+
 def test_validate_input_data_reports_nonnumeric(config, canonical_df):
     bad = canonical_df.copy()
     bad["demand_kw"] = bad["demand_kw"].astype(object)
