@@ -7,7 +7,7 @@
 | timestamp | datetime | Yes | — | Interval-ending timestamp | Source (mapped) |
 | meter_id | string | Yes | — | Physical meter identifier | Source (mapped) |
 | demand_kw | float | Yes | kW | Average demand over the interval | Source (mapped); superseded downstream by observed/interpolated/analysis_demand_kw |
-| temperature_f | float | No | °F | Site/area weather-station temperature | Source (mapped) |
+| temperature_f | float | No | °F | Site/area weather-station temperature | Source (mapped); or merged in from `data.external_temperature.file_path` (nearest-timestamp join) when configured |
 
 ## Derived fields (Stage 1)
 

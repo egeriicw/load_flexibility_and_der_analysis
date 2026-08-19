@@ -1,2 +1,14 @@
 pattern_id,pattern_type,description,date,metric,value,z_score,statistical_support
-Portfolio_outlier_000,outlier_day,2025-06-11 is an outlier on daily_energy_kwh (z=3.01),2025-06-11,daily_energy_kwh,23238.5475,3.012,z >= 2.5
+Portfolio_outlier_000,outlier_day,2024-08-29 is an outlier on daily_energy_kwh (z=2.63),2024-08-29,daily_energy_kwh,20496.279999999995,2.629,z >= 2.5
+Portfolio_outlier_001,outlier_day,2025-06-24 is an outlier on daily_energy_kwh (z=2.53),2025-06-24,daily_energy_kwh,20206.279999999995,2.529,z >= 2.5
+Portfolio_outlier_002,outlier_day,2025-06-25 is an outlier on daily_energy_kwh (z=2.76),2025-06-25,daily_energy_kwh,20877.18,2.76,z >= 2.5
+Portfolio_outlier_003,outlier_day,2025-06-26 is an outlier on daily_energy_kwh (z=2.64),2025-06-26,daily_energy_kwh,20529.2,2.64,z >= 2.5
+Portfolio_outlier_004,outlier_day,2025-06-30 is an outlier on daily_energy_kwh (z=2.82),2025-06-30,daily_energy_kwh,21037.739999999998,2.816,z >= 2.5
+Portfolio_outlier_005,outlier_day,2025-07-01 is an outlier on daily_energy_kwh (z=2.95),2025-07-01,daily_energy_kwh,21421.16,2.948,z >= 2.5
+Portfolio_outlier_006,outlier_day,2025-07-14 is an outlier on daily_energy_kwh (z=2.56),2025-07-14,daily_energy_kwh,20306.300000000003,2.564,z >= 2.5
+Portfolio_outlier_007,outlier_day,2025-07-16 is an outlier on daily_energy_kwh (z=2.73),2025-07-16,daily_energy_kwh,20779.32,2.727,z >= 2.5
+Portfolio_outlier_008,outlier_day,2025-07-17 is an outlier on daily_energy_kwh (z=2.76),2025-07-17,daily_energy_kwh,20874.54,2.759,z >= 2.5
+Portfolio_outlier_009,outlier_day,2025-07-30 is an outlier on daily_energy_kwh (z=2.59),2025-07-30,daily_energy_kwh,20377.16,2.588,z >= 2.5
+Portfolio_outlier_010,outlier_day,2025-07-31 is an outlier on daily_energy_kwh (z=2.74),2025-07-31,daily_energy_kwh,20814.5,2.739,z >= 2.5
+Portfolio_outlier_011,outlier_day,2024-08-29 is an outlier on maximum_demand_kw (z=2.78),2024-08-29,maximum_demand_kw,1026.96,2.785,z >= 2.5
+Portfolio_outlier_012,outlier_day,2024-09-26 is an outlier on maximum_demand_kw (z=2.63),2024-09-26,maximum_demand_kw,1005.2,2.634,z >= 2.5

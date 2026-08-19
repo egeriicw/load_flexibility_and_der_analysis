@@ -15,7 +15,7 @@ random_seed = 42
 # INPUT DATA
 # ----------------------------------------------------------------------------
 [data.input]
-file_path = "data/input/synthetic_load_data.csv"
+file_path = "data/input/Green Button Data McDonough Hall - Updated.csv"
 file_format = "csv"
 
 # Map source column names -> canonical field names.
@@ -26,6 +26,26 @@ timestamp = "timestamp"
 meter_id = "meter_id"
 demand_kw = "demand_kw"
 temperature_f = "temperature_f"
+
+
+# Optional: load temperature from a separate file instead of (or in
+# addition to) a temperature_f column in the main input file. If
+# file_path is set, it is always loaded; by default its values only
+# fill rows where temperature_f is missing/absent (override_existing =
+# true makes it take precedence wherever a match is found). Joined on
+# timestamp alone (temperature is site-level, not per-meter).
+[data.external_temperature]
+file_path = "TemperatureF_15min.csv"                 # e.g. "data/input/external_temperature.csv"; "" = disabled
+file_format = "csv"
+override_existing = false
+join_tolerance_minutes = 30
+
+[data.external_temperature.column_mapping]
+timestamp = "timestamp"
+temperature_f = "temperature_f"
+
+[data.external_temperature.datetime]
+format = "auto"
 
 [data.datetime]
 format = "%Y-%m-%d %H:%M:%S"   # strptime format; "auto" permitted

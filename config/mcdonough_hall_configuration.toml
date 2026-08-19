@@ -1,0 +1,186 @@
+# ============================================================================
+# McDonough Hall - Real Meter Configuration
+# Single interval-meter (Green Button export) with the input file's own
+# temperature_f column overridden by a separate weather-station export,
+# since the values shipped in the meter export are placeholder/bogus
+# (0/30/61/100 deg F flat bands, not real observations).
+# ============================================================================
+
+[metadata]
+config_name = "mcdonough_hall"
+random_seed = 42
+
+# ----------------------------------------------------------------------------
+# INPUT DATA
+# ----------------------------------------------------------------------------
+[data.input]
+file_path = "data/input/Green Button Data McDonough Hall - Updated.csv"
+file_format = "csv"
+
+[data.column_mapping]
+timestamp = "timestamp"
+meter_id = "meter_id"
+demand_kw = "demand_kw"
+temperature_f = "temperature_f"
+
+[data.datetime]
+format = "%m/%d/%y %H:%M"
+timestamp_convention = "interval_ending"
+timezone = "none"
+
+# ----------------------------------------------------------------------------
+# EXTERNAL TEMPERATURE
+# The meter export's temperature_f column is placeholder data, not real
+# weather observations, so override_existing = true makes the external
+# weather-station series take precedence everywhere it has a match.
+# ----------------------------------------------------------------------------
+[data.external_temperature]
+file_path = "data/input/TemperatureF_15min.csv"
+file_format = "csv"
+override_existing = true
+join_tolerance_minutes = 30
+
+[data.external_temperature.column_mapping]
+timestamp = "DATE"
+temperature_f = "TEMP"
+
+[data.external_temperature.datetime]
+format = "auto"
+
+# ----------------------------------------------------------------------------
+# TIME RESOLUTION
+# ----------------------------------------------------------------------------
+[data.time]
+resolution = "auto"
+allow_mixed_resolution = false
+
+# ----------------------------------------------------------------------------
+# MISSING DATA
+# ----------------------------------------------------------------------------
+[data.missing]
+interpolation_enabled = true
+method = "linear"
+max_interpolation_intervals = 4
+large_gap_method = "leave_missing"
+forward_fill_enabled = false
+backward_fill_enabled = false
+
+[data.incomplete_days]
+policy = "retain_with_warning"
+
+# ----------------------------------------------------------------------------
+# VALIDATION STRICTNESS
+# ----------------------------------------------------------------------------
+[validation]
+negative_demand = "error"
+duplicate_timestamp = "warning"   # DST fall-back produces duplicate naive 1am timestamps
+nonnumeric_demand = "error"
+irregular_interval = "warning"
+strict = false
+
+# ----------------------------------------------------------------------------
+# METERS
+# ----------------------------------------------------------------------------
+[[meters]]
+meter_id = "KZD390965687-1"
+display_name = "McDonough Hall"
+
+# ----------------------------------------------------------------------------
+# METER GROUPS
+# Single meter; no groups needed beyond the portfolio (= the one meter).
+# ----------------------------------------------------------------------------
+meter_groups = []
+
+# ----------------------------------------------------------------------------
+# PORTFOLIO
+# ----------------------------------------------------------------------------
+[portfolio]
+include_all_meters = true
+excluded_meters = []
+
+# ----------------------------------------------------------------------------
+# CALENDAR
+# ----------------------------------------------------------------------------
+[calendar]
+holidays = []
+custom_day_types = []
+
+[calendar.seasons]
+"6" = "summer"
+"7" = "summer"
+"8" = "summer"
+"12" = "winter"
+"1" = "winter"
+"2" = "winter"
+"3" = "spring"
+"4" = "spring"
+"5" = "spring"
+"9" = "fall"
+"10" = "fall"
+"11" = "fall"
+
+# ----------------------------------------------------------------------------
+# ANALYSIS PERIOD
+# Covers the full span of the meter export (2024-07-29 through 2025-09-09).
+# ----------------------------------------------------------------------------
+[analysis.period]
+start_date = "2024-07-29"
+end_date = "2025-09-09"
+
+# ----------------------------------------------------------------------------
+# OUTPUT
+# ----------------------------------------------------------------------------
+[output]
+output_directory = "output"
+export_formats = ["csv"]
+
+[logging]
+level = "INFO"
+
+# ============================================================================
+# STAGE 2/3 STUB SECTIONS (not consumed by Stage 1 code)
+# ============================================================================
+[analysis.temperature]
+temperature_bands_f = [32, 50, 65, 80, 90]
+balance_point_method = "change_point_regression"
+
+[analysis.demand]
+thresholds_kw = [500, 750, 1000]
+top_percentiles = [0.99, 0.95]
+top_n_hours = [10, 25, 50]
+
+[analysis.peak_events]
+allowable_gap_intervals = 1
+
+[analysis.profiles]
+normalization_method = "peak_normalized"
+
+[analysis.clustering]
+enabled = true
+method = "auto"
+n_clusters = "auto"
+
+[[time_periods]]
+name = "on_peak"
+start = "14:00"
+end = "19:00"
+
+[[time_periods]]
+name = "intermediate"
+start = "07:00"
+end = "14:00"
+
+[[time_periods]]
+name = "off_peak"
+start = "19:00"
+end = "07:00"
+
+[scenarios.load_shedding]
+enabled = true
+reduction_levels_kw = [100, 250, 500]
+minimum_resulting_demand_kw = 0
+
+[scenarios.storage]
+enabled = false
+
+searches = []

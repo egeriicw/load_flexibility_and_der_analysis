@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs -I{} echo {})",
+      "Bash(jupyter nbconvert *)",
+      "Read(//tmp/**)",
+      "Bash(ls notebooks/; sed -n '90,140p' /tmp/nb.py)",
+      "Read(//private/tmp/**)",
+      "Bash(git stash *)",
+      "Bash(awk '{ if \\(length\\($0\\) > 79\\) print FILENAME\":\"NR\": \"length\\($0\\) }' src/ingestion.py)",
+      "Bash(python3 -)",
+      "Bash(uv run *)",
+      "Bash(ls -la /Users/egeriicw/.local/share/virtualenvs/IntervalDataTranslater-CqY87ASC/ 2>&1 | head -20; echo \"---\"; cat /Users/egeriicw/.local/share/virtualenvs/IntervalDataTranslater-CqY87ASC/pyvenv.cfg 2>&1)",
+      "Read(//Users/egeriicw/.local/share/virtualenvs/IntervalDataTranslater-CqY87ASC/**)",
+      "Bash(find / -maxdepth 6 -iname \"*IntervalDataTranslater*\")",
+      "Bash(find / -maxdepth 8 -iname \"Pipfile\")",
+      "Bash(env -u VIRTUAL_ENV uv run python3 -)",
+      "Bash(env -u VIRTUAL_ENV uv run python3 -m pytest tests/ -q)"
+    ]
+  }
+}
